@@ -1,0 +1,136 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - MagicFrame AI FaceSwap & Video</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Privacy Policy</h1>
+    <p>Welcome to MagicFrame! Your privacy is important to us, and we are committed to protecting the information you share with us. This Privacy Policy explains what data we collect, how we use it, share it, and protect it when you use MagicFrame.</p>
+
+    <h2>1. Information We Collect</h2>
+
+    <h3>1.1 Personal Data</h3>
+    <p>When using MagicFrame, we may collect the following personal data:</p>
+    <ul>
+        <li>Subscription and purchase history (processed through third-party services like RevenueCat)</li>
+    </ul>
+
+    <h3>1.2 Image and Biometric Data</h3>
+    <p>To provide our services, we collect and process the following:</p>
+    <ul>
+        <li>Facial images and biometric data for AI-powered photo and video generation</li>
+        <li>Uploaded photos and videos for features like face swap, custom templates, and animation generation</li>
+    </ul>
+
+    <h3>1.3 Device and Usage Data</h3>
+    <p>We may also collect the following non-personal data:</p>
+    <ul>
+        <li>Device type and operating system</li>
+        <li>Language preferences</li>
+        <li>App usage statistics (via Firebase Analytics)</li>
+    </ul>
+
+    <h2>2. How We Use Your Data</h2>
+    <p>The collected data is used for the following purposes:</p>
+    <ul>
+        <li>Providing AI-powered photo and video generation services</li>
+        <li>Enhancing and personalizing user experience</li>
+        <li>Analyzing usage trends to optimize the app</li>
+        <li>Managing in-app purchases and subscriptions</li>
+        <li>Ensuring security and preventing fraud</li>
+    </ul>
+
+    <h2>3. How We Share Your Data</h2>
+    <p>We do not sell your personal data. However, we may share it in the following cases:</p>
+    <ul>
+        <li>Service providers: AI processing partners and cloud storage services</li>
+        <li>Payment processors: Secure payment handling through third-party services</li>
+        <li>Legal authorities: When required to comply with legal obligations</li>
+    </ul>
+
+    <h2>4. Data Retention & Security</h2>
+    <p>We retain your data only as long as necessary to provide our services. Facial images and biometric data are not deleted after processing; they are stored to assist users, speed up processes (such as recent photos in face swap), and provide history access. We implement industry-standard security measures to protect your data.</p>
+
+    <h2>5. User Rights & Control</h2>
+    <p>As a user, you have the right to:</p>
+    <ul>
+        <li>Access, update, or delete your personal data</li>
+        <li>Request the deletion of your biometric data</li>
+    </ul>
+
+    <h2>6. Children's Privacy</h2>
+    <p>MagicFrame is designed for users aged 13 and above. We do not knowingly collect data from individuals under the age of 13.</p>
+
+    <h2>7. Third-Party Services</h2>
+    <p>MagicFrame integrates the following third-party services:</p>
+    <ul>
+        <li>RevenueCat (Subscription and payment management)</li>
+        <li>AI service providers (Image processing and generation)</li>
+        <li>Firebase Analytics (User analytics and behavior tracking)</li>
+    </ul>
+    <p>Each service provider has its own privacy policy governing data usage.</p>
+
+    <h2>8. Changes to This Privacy Policy</h2>
+    <p>We may update this Privacy Policy from time to time. The updated version will be made accessible within the app.</p>
+
+    <h2>9. Contact Us</h2>
+    <p>If you have any questions or concerns about this Privacy Policy, you can contact us at:</p>
+    <p><strong>MagicFrame</strong></p>
+    <p><strong>Email:</strong> aimagicframe.help@gmail.com</p>
+</body>
+</html>
